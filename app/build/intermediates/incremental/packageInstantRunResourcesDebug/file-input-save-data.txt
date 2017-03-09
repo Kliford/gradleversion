@@ -1,0 +1,18 @@
+#Internal package file, do not edit.
+#Wed Mar 08 00:59:26 EET 2017
+1.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_
+4.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\menu\\http_server.xml
+1.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\activity_http_server.xml
+4.set=ANDROID_RESOURCE
+2.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_
+3.set=ANDROID_RESOURCE
+2.set=ANDROID_RESOURCE
+2.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\AndroidManifest.xml
+count=5
+1.set=ANDROID_RESOURCE
+3.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_
+0.set=ANDROID_RESOURCE
+0.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_
+3.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\resources.arsc
+0.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-hdpi-v4\\ic_launcher.png
+4.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_

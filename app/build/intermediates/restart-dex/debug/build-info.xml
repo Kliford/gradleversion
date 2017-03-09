@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<instant-run
+    abi="x86"
+    api-level="25"
+    density="hdpi"
+    format="8"
+    plugin-version="2.2.3"
+    timestamp="13543702305752"
+    token="6468185799806678574"
+    verifier="MANIFEST_FILE_CHANGE" >
+
+    <task
+        name="javac"
+        duration="233" />
+    <task
+        name="instant-run-dex"
+        duration="0" />
+    <task
+        name="instant-run-transform"
+        duration="52" />
+    <task
+        name="verifier"
+        duration="3" />
+
+    <artifact
+        location="C:\OSMZ\gradleversion\app\build\outputs\apk\app-debug.apk"
+        type="MAIN" />
+
+    <build
+        timestamp="13543702305752"
+        verifier="MANIFEST_FILE_CHANGE" >
+        <artifact
+            location="C:\OSMZ\gradleversion\app\build\outputs\apk\app-debug.apk"
+            type="MAIN" />
+    </build>
+
+</instant-run>

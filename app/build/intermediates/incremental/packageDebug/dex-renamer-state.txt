@@ -1,0 +1,7 @@
+#Wed Mar 08 00:59:28 EET 2017
+base.0=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_0d7e0a3834612fc6efa950de3fd9f5cb8bfe0195
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_a44e0490658679edef7b73e02055dc5e242ff529\\classes.dex
+base.1=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_a44e0490658679edef7b73e02055dc5e242ff529
+file.0=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_0d7e0a3834612fc6efa950de3fd9f5cb8bfe0195\\classes.dex

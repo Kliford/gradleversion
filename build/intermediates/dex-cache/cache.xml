@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="6913d26c49c6645e147f283952fc3bb783bf501c">
+        sha1="dd8ae73a86a6f9f5ca471e14e9af79db659e7335">
         <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_0d7e0a3834612fc6efa950de3fd9f5cb8bfe0195\classes.dex" />
     </item>
     <item
@@ -79,7 +79,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="2bea9b68147c6411e9cd29c05c835757d7a60428">
+        sha1="83f85d4b323935cd0068e3a2b937bb81230d9c8e">
         <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_a44e0490658679edef7b73e02055dc5e242ff529\classes.dex" />
     </item>
 

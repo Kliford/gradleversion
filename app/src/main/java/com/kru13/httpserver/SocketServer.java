@@ -1,6 +1,5 @@
 package com.kru13.httpserver;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,18 +8,11 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.InterruptedIOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Semaphore;
@@ -30,7 +22,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 
@@ -38,20 +29,17 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class SocketServer extends Thread {
 
-	ServerSocket serverSocket;
-    ServerSocket serverSocketCam;
-	public final int port = 12345;
-    public final int videoPort = 12346;
-	boolean bRunning;
+	private ServerSocket serverSocket;
+	private final int port = 12345;
+    final private int IMAGE_QUALITY = 70;
+    final private int SEMAPHORE_PERMITS = 1;
+	private boolean bRunning;
     private HttpServerActivity context;
-    private ArrayList<InetAddress> socketList;
     private Semaphore semaphore;
-
-    String myData = "";
 
     SocketServer (HttpServerActivity context) {
         this.context = context;
-        semaphore = new Semaphore(2);
+        semaphore = new Semaphore(SEMAPHORE_PERMITS);
     }
 
 	public void close() {
@@ -71,23 +59,15 @@ public class SocketServer extends Thread {
 
             bRunning = true;
 
-
-
             while (bRunning) {
-
                 Log.d("SERVER", "Socket Waiting for connection");
                 Socket s = serverSocket.accept();
-
-//                Thread cs = new Thread( new CameraStream(new ServerSocket(videoPort), context));
-//                cs.start();
 
                 Log.d("SERVER", "Socket Accepted");
                 Log.d("SERVER", "1.semaphore.availablePermits(): " + semaphore.availablePermits());
 
-
                 Thread th = new Thread(new ServerThread(s));
                 th.start();
-
             }
         }
         catch (IOException e) {
@@ -110,9 +90,7 @@ public class SocketServer extends Thread {
     }
 
     private class ServerThread extends Thread{
-
             private Socket clientSocket;
-            //private BufferedWriter out;
 
             public ServerThread(Socket clientSocket) {
                 this.clientSocket = clientSocket;
@@ -124,136 +102,119 @@ public class SocketServer extends Thread {
                     Log.d("SERVER", "2.semaphore.availablePermits(): " + semaphore.availablePermits());
 
                     BufferedOutputStream bout = new BufferedOutputStream( clientSocket.getOutputStream() );
+                    BufferedReader bin = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-                    BufferedReader brin = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-
-                    String request = brin.readLine();
-//                    Log.d("TADY", request );
-
-                    //out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-
-                    semaphore.acquire();
-                    semaphore.availablePermits();
-                    Log.d("SERVER", "3.semaphore.availablePermits(): " + semaphore.availablePermits());
+                    String request = bin.readLine();
 
                         try {
-                            FileInputStream fis = new FileInputStream(context.myExternalFile);
-                            DataInputStream in = new DataInputStream(fis);
-                            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
-                            //nebo
-                            //PrintWriter out = new PrintWriter(s.getOutputStream());
-                            //out.println("HTTP/1.1 200 OK");
-                            //out.println("Content-Type: text/html"); atd
-
-                            /*
-                            try {
-                                sleep(4000);
-                            } catch (Exception e) {
-                            }
-                            */
-
-
                             if (request.contains("pic")) {
-                                String s1 = "HTTP/1.1 200 OK" + '\n';
-                                bout.write(s1.getBytes());
-                                String s2 = "Date: " + SocketServer.getCurrentDate() + '\n';
-                                bout.write(s2.getBytes());
-                                String s6 = "Content-Type: image/jpeg" + '\n' + '\n';
-                                bout.write(s6.getBytes());
-
-
-
-                                    Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/pic.jpg");
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    bm.compress (Bitmap.CompressFormat.JPEG, 70, baos); //bm is the bitmap object
-                                    byte[] b = baos.toByteArray();
-
-                                    bout.write(b);
-
-                                    String s10 = "\n";
-                                    bout.write(s10.getBytes());
-
+                                sendPictureResponse(bout, context.imageFilePath, IMAGE_QUALITY);
                             }
 
                             else if (request.contains("stream")){
-                                String s1 = "HTTP/1.1 200 OK" + '\n';
-                                bout.write(s1.getBytes());
-                                String s2 = "Date: " + SocketServer.getCurrentDate() + '\n';
-                                bout.write(s2.getBytes());
-                                String s3 = "Content-Type: multipart/x-mixed-replace; boundary=gc0p4Jq0M2Yt08jU534c0p" + '\n' + '\n';
-                                bout.write(s3.getBytes());
-
-
-                                while (true) {
-                                    String s5 = "--gc0p4Jq0M2Yt08jU534c0p" + '\n';
-                                    bout.write(s5.getBytes());
-                                    String s6 = "Content-Type: image/jpeg" + '\n' + '\n';
-                                    bout.write(s6.getBytes());
-
-                                    Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/pic.jpg");
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    bm.compress (Bitmap.CompressFormat.JPEG, 70, baos); //bm is the bitmap object
-                                    byte[] b = baos.toByteArray();
-
-                                    bout.write(b);
-
-                                    String s10 = "\n";
-                                    bout.write(s10.getBytes());
-                                }
+                                sendMJPEGStreamResponse(bout, context.imageFilePath, IMAGE_QUALITY);
                             }
 
                             else if (request.contains("favico")){
-                                fis.close();
-                                in.close();
-                                br.close();
-                                bout.close();
-                                return;
+
                             }
-                            else {
-                                int size = printOkPage(bout, br);
+                            else { //HTML webpage
+                                if (!semaphore.tryAcquire()) {
+                                    sendServerTooBusyResponse(bout);
+                                    closeAndReleaseSocket(bout,clientSocket);
+                                    interrupt();
+                                }
+                                Log.d("SERVER", "3.semaphore.availablePermits(): " + semaphore.availablePermits());
+
+                                Thread.sleep(4500); //simulated work to test semaphore
+
+                                int size = sendOkPageResponse(bout, createBufferedReader (context.myExternalFile));
+
                                 addConnectionRecord(size, clientSocket);
                             }
-
-                            fis.close();
-                            in.close();
-                            br.close();
-                            bout.close();
-
-                            //in.close();
                         } catch (FileNotFoundException e) {
                             printPageNotFound(bout);
                         } finally {
-
-                            bout.flush();
-                            bout.close();
-                            clientSocket.close();
-                            semaphore.release();
+                            closeAndReleaseSocket(bout, clientSocket);
                         }
-
-
-
-
                 }catch(IOException e){
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
             }
 
-        private void printServerTooBusy(BufferedWriter out) {
+        private BufferedReader createBufferedReader(File myExternalFile) throws FileNotFoundException {
+            FileInputStream fis = new FileInputStream(myExternalFile);
+            DataInputStream in = new DataInputStream(fis);
+            return new BufferedReader(new InputStreamReader(in));
+        }
+
+        private void closeAndReleaseSocket(BufferedOutputStream bout, Socket clientSocket) throws IOException {
+            bout.flush();
+            bout.close();
+            clientSocket.close();
+            if (semaphore.availablePermits() < SEMAPHORE_PERMITS)
+                semaphore.release();
+        }
+
+        private void sendMJPEGStreamResponse(BufferedOutputStream bout, String imageFilePath, int quality) throws IOException {
+            String s1 = "HTTP/1.1 200 OK" + '\n';
+            bout.write(s1.getBytes());
+            String s2 = "Date: " + SocketServer.getCurrentDate() + '\n';
+            bout.write(s2.getBytes());
+            String s3 = "Content-Type: multipart/x-mixed-replace; boundary=gc0p4Jq0M2Yt08jU534c0p" + '\n' + '\n';
+            bout.write(s3.getBytes());
+
+            while (true) {
+                String s5 = "--gc0p4Jq0M2Yt08jU534c0p" + '\n';
+                bout.write(s5.getBytes());
+                String s6 = "Content-Type: image/jpeg" + '\n' + '\n';
+                bout.write(s6.getBytes());
+
+                byte[] image = getImageInBytes(imageFilePath, quality);
+
+                bout.write(image);
+
+                String newLine = "\n";
+                bout.write(newLine.getBytes());
+            } // neukonceno --gc0p4Jq0M2Yt08jU534c0p--
+        }
+
+        private void sendPictureResponse(BufferedOutputStream bout, String pathToImage, int quality) throws IOException {
+            String s1 = "HTTP/1.1 200 OK" + '\n';
+            bout.write(s1.getBytes());
+            String s2 = "Date: " + SocketServer.getCurrentDate() + '\n';
+            bout.write(s2.getBytes());
+            String s3 = "Content-Type: image/jpeg" + '\n' + '\n';
+            bout.write(s3.getBytes());
+
+            byte[] image = getImageInBytes(pathToImage, quality);
+
+            bout.write(image);
+
+            String newLine = "\n";
+            bout.write(newLine.getBytes());
+        }
+
+        private byte[] getImageInBytes(String imageFilePath, int quality) {
+            Bitmap bm = BitmapFactory.decodeFile(imageFilePath);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress (Bitmap.CompressFormat.JPEG, quality, baos); //bm is the bitmap object
+            return baos.toByteArray();
+        }
+
+        private void sendServerTooBusyResponse(BufferedOutputStream out) {
             try {
-                out.append("HTTP/1.1 503 Service Unavailable" + '\n');
-                out.append("Content-Type: text/html" + '\n' + '\n');
-                out.append("<!DOCTYPE html>" + '\n');
-                out.append("<html>" + '\n');
-                out.append("<body>" + '\n');
-                out.append("<h1>Error 503:  Server too busy.</h1>" + '\n');
-                out.append("<p>We are really sorry.</p>" + '\n');
-                out.append("</body>" + '\n');
-                out.append("</html>" + '\n');
+                out.write("\"HTTP/1.1 503 Service Unavailable\" + \'\n\'".getBytes());
+                out.write("\"Content-Type: text/html\" + \'\n\' + \'\n\'".getBytes());
+                out.write("\"<!DOCTYPE html>\" + \'\n\'".getBytes());
+                out.write("\"<html>\" + \'\n\'".getBytes());
+                out.write("\"<body>\" + \'\n\'".getBytes());
+                out.write("\"<h1>Error 503:  Server too busy.</h1>\" + \'\n\'".getBytes());
+                out.write("\"<p>We are really sorry.</p>\" + \'\n\'".getBytes());
+                out.write("\"</body>\" + \'\n\'".getBytes());
+                out.write("\"</html>\" + \'\n\'".getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -268,25 +229,11 @@ public class SocketServer extends Thread {
                     + clientSocket.getRemoteSocketAddress();
             context.handler.sendMessage(msg);
         }
+
         // out: ZMENA Z BURREFEREDWRITERU NA BUFFEREDINPUTSTREAM
         //je "obecnejsi", dokaze zapisovat data, ne jen stringy
-        private int printOkPage(BufferedOutputStream out, BufferedReader br) {
+        private int sendOkPageResponse(BufferedOutputStream out, BufferedReader br) {
             int size = 0;
-
-
-            Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/pic.jpg");
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bm.compress (Bitmap.CompressFormat.JPEG, 90, baos); //bm is the bitmap object
-            byte[] b = baos.toByteArray();
-
-            String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("data:image/jpeg;base64,");
-            sb.append(encodedImage);
-
-            String newImage = sb.toString();
-
 
             try {
                 String s1 = "HTTP/1.1 200 OK" + '\n';
@@ -299,18 +246,15 @@ public class SocketServer extends Thread {
                 String strLine;
 
                 while ((strLine = br.readLine()) != null) {
-
-                    String fileLine = strLine;
-                    String s4 = fileLine + '\n';
-                    out.write(s4.getBytes());
-                    size += s4.getBytes().length;
+                    String responseLine = strLine + '\n';
+                    out.write(responseLine.getBytes());
+                    size += responseLine.getBytes().length;
                 }
             } catch (IOException e) {
             e.printStackTrace();
             }
 
             return size;
-
         }
 
         private void printPageNotFound(BufferedOutputStream out) {

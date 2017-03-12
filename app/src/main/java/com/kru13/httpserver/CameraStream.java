@@ -40,7 +40,7 @@ public class CameraStream extends Thread {
                 bout.write(s1.getBytes());
                 String s2 = "Date: " + SocketServer.getCurrentDate() + '\n';
                 bout.write(s2.getBytes());
-                String s3 = "Content-Type: video/x-motion-jpeg; boundary=gc0p4Jq0M2Yt08jU534c0p" + '\n' + '\n';
+                String s3 = "Content-Type: multipart/x-mixed-replace; boundary=gc0p4Jq0M2Yt08jU534c0p" + '\n' + '\n';
                 bout.write(s3.getBytes());
 
 

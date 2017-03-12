@@ -262,8 +262,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				public void onConfigureFailed(CameraCaptureSession session) {
 				}
 			}, mBackgroundHandler);
-
-
 		} catch (CameraAccessException e) {
 			e.printStackTrace();
 		}
@@ -380,15 +378,12 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		return false;
 	}
 
-
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.http_server, menu);
 		return true;
 	}
-
 
 	@Override
 	public void onClick(View v) {
@@ -405,8 +400,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				s = new SocketServer(this);
 				s.start();
 
-
-
 				while (true) {
 					try {
 						takePicture();
@@ -415,8 +408,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 						e.printStackTrace();
 					}
 				}
-
-
 			}
 		}
 		if (v.getId() == R.id.button2) {
@@ -426,7 +417,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
 

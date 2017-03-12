@@ -2,7 +2,6 @@ package com.kru13.httpserver;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -10,17 +9,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Semaphore;
 
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
@@ -32,7 +28,7 @@ public class SocketServer extends Thread {
 	private ServerSocket serverSocket;
 	private final int port = 12345;
     final private int IMAGE_QUALITY = 70;
-    final private int SEMAPHORE_PERMITS = 1;
+    final private int SEMAPHORE_PERMITS = 2;
 	private boolean bRunning;
     private HttpServerActivity context;
     private Semaphore semaphore;
@@ -106,6 +102,12 @@ public class SocketServer extends Thread {
 
                     String request = bin.readLine();
 
+                    if (!semaphore.tryAcquire()) {
+                        sendServerTooBusyResponse(bout);
+                        closeAndReleaseSocket(bout,clientSocket);
+                        interrupt();
+                    }
+
                         try {
                             if (request.contains("pic")) {
                                 sendPictureResponse(bout, context.imageFilePath, IMAGE_QUALITY);
@@ -115,22 +117,19 @@ public class SocketServer extends Thread {
                                 sendMJPEGStreamResponse(bout, context.imageFilePath, IMAGE_QUALITY);
                             }
 
-                            else if (request.contains("favico")){
+                            else if (request.contentEquals("GET / HTTP/1.1")){ //HTML webpage
 
-                            }
-                            else { //HTML webpage
-                                if (!semaphore.tryAcquire()) {
-                                    sendServerTooBusyResponse(bout);
-                                    closeAndReleaseSocket(bout,clientSocket);
-                                    interrupt();
-                                }
                                 Log.d("SERVER", "3.semaphore.availablePermits(): " + semaphore.availablePermits());
 
-                                Thread.sleep(4500); //simulated work to test semaphore
+                                //Thread.sleep(4500); //simulated work to test semaphore
 
                                 int size = sendOkPageResponse(bout, createBufferedReader (context.myExternalFile));
-
                                 addConnectionRecord(size, clientSocket);
+                            }
+
+                            else {
+                                closeAndReleaseSocket(bout,clientSocket);
+                                interrupt();
                             }
                         } catch (FileNotFoundException e) {
                             printPageNotFound(bout);
@@ -139,9 +138,9 @@ public class SocketServer extends Thread {
                         }
                 }catch(IOException e){
                     e.printStackTrace();
-                } catch (InterruptedException e) {
+                } /*catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
 
         private BufferedReader createBufferedReader(File myExternalFile) throws FileNotFoundException {
@@ -200,21 +199,28 @@ public class SocketServer extends Thread {
         private byte[] getImageInBytes(String imageFilePath, int quality) {
             Bitmap bm = BitmapFactory.decodeFile(imageFilePath);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bm.compress (Bitmap.CompressFormat.JPEG, quality, baos); //bm is the bitmap object
+            bm.compress (Bitmap.CompressFormat.JPEG, quality, baos);
             return baos.toByteArray();
         }
 
         private void sendServerTooBusyResponse(BufferedOutputStream out) {
             try {
-                out.write("\"HTTP/1.1 503 Service Unavailable\" + \'\n\'".getBytes());
-                out.write("\"Content-Type: text/html\" + \'\n\' + \'\n\'".getBytes());
-                out.write("\"<!DOCTYPE html>\" + \'\n\'".getBytes());
-                out.write("\"<html>\" + \'\n\'".getBytes());
-                out.write("\"<body>\" + \'\n\'".getBytes());
-                out.write("\"<h1>Error 503:  Server too busy.</h1>\" + \'\n\'".getBytes());
-                out.write("\"<p>We are really sorry.</p>\" + \'\n\'".getBytes());
-                out.write("\"</body>\" + \'\n\'".getBytes());
-                out.write("\"</html>\" + \'\n\'".getBytes());
+                String s1 = "HTTP/1.1 503 Service Unavailable" + '\n';
+                out.write(s1.getBytes());
+                String s2 = "Content-Type: text/html" + '\n' + '\n';
+                out.write(s2.getBytes());
+                String s3 = "<!DOCTYPE html>" + '\n';
+                out.write(s3.getBytes());
+                String s4 = "<html>" + '\n';
+                out.write(s4.getBytes());
+                String s5 = "<body>" + '\n';
+                out.write(s5.getBytes());
+                String s6 = "<h1>Error 503:  Server too busy.</h1>" + '\n';
+                out.write(s6.getBytes());
+                String s7 = "</body>" + '\n';
+                out.write(s7.getBytes());
+                String s8 = "</html>" + '\n';
+                out.write(s8.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -258,23 +264,29 @@ public class SocketServer extends Thread {
         }
 
         private void printPageNotFound(BufferedOutputStream out) {
-            /*
-            try {//TODO: prevest
 
-                out.append("HTTP/1.1 404 Not Found" + '\n');
-                out.append("Content-Type: text/html" + '\n' + '\n');
-                out.append("<!DOCTYPE html>" + '\n');
-                out.append("<html>" + '\n');
-                out.append("<body>" + '\n');
-                out.append("<h1>Error 404:  Page not found</h1>" + '\n');
-                out.append("<p>We are really sorry.</p>" + '\n');
-                out.append("</body>" + '\n');
-                out.append("</html>" + '\n');
+            try {
+                String s1 = "HTTP/1.1 404 Not Found" + '\n';
+                out.write(s1.getBytes());
+                String s2 = "Content-Type: text/html" + '\n' +'\n';
+                out.write(s2.getBytes());
+                String s3 = "<!DOCTYPE html>" + '\n';
+                out.write(s3.getBytes());
+                String s4 = "<html>" + '\n';
+                out.write(s4.getBytes());
+                String s5 = "<body>" + '\n';
+                out.write(s5.getBytes());
+                String s6 = "<h1>Error 404:  Page not found</h1>" + '\n';
+                out.write(s6.getBytes());
+                String s7 = "</body>" + '\n';
+                out.write(s7.getBytes());
+                String s8 = "</html>" + '\n';
+                out.write(s8.getBytes());
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            */
+
         }
     }
 }

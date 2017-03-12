@@ -5,33 +5,40 @@
     density="hdpi"
     format="8"
     plugin-version="2.2.3"
-    timestamp="13543702305752"
+    timestamp="400852231926056"
     token="6468185799806678574"
-    verifier="MANIFEST_FILE_CHANGE" >
+    verifier="COLD_SWAP_REQUESTED" >
 
     <task
         name="javac"
-        duration="233" />
+        duration="572" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="52" />
+        duration="39" />
     <task
         name="verifier"
-        duration="3" />
+        duration="2" />
 
     <artifact
-        location="C:\OSMZ\gradleversion\app\build\outputs\apk\app-debug.apk"
-        type="MAIN" />
+        location="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_6\classes.dex"
+        type="DEX" />
 
     <build
-        timestamp="13543702305752"
-        verifier="MANIFEST_FILE_CHANGE" >
+        timestamp="398195261987748"
+        verifier="FULL_BUILD_REQUESTED" >
         <artifact
             location="C:\OSMZ\gradleversion\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
+    </build>
+    <build
+        timestamp="400852231926056"
+        verifier="COLD_SWAP_REQUESTED" >
+        <artifact
+            location="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_6\classes.dex"
+            type="DEX" />
     </build>
 
 </instant-run>

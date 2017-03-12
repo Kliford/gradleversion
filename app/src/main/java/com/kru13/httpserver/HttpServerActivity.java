@@ -14,6 +14,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
@@ -56,6 +57,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 	protected CameraDevice cameraDevice;
 	private Handler mBackgroundHandler;
 	private HandlerThread mBackgroundThread;
+	private boolean running;
 
 	private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 	static {
@@ -65,13 +67,20 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		ORIENTATIONS.append(Surface.ROTATION_270, 180);
 	}
 	private Size imageDimension;
+	private File file;
+	protected CaptureRequest.Builder captureRequestBuilder;
+	protected CameraCaptureSession cameraCaptureSessions;
+	private String cameraId;
+	private ImageReader imageReader;
 
 	private static final int READ_EXTERNAL_STORAGE = 1;
+	private static final int REQUEST_CAMERA_PERMISSION = 200;
 
 	public TextView tv;
 	private TextureView textureView;
 
 	public File myExternalFile;
+	public File myExternalPhotoFile;
 	private String filename = "page.html";
 	private String filepath;
 	private static final String TAG = "AndroidCameraApi";
@@ -81,6 +90,8 @@ public class HttpServerActivity extends Activity implements OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_server);
+
+		myExternalPhotoFile = new File(Environment.getExternalStorageDirectory(), "pic.jpg");
 
         Button btn1 = (Button)findViewById(R.id.button1);
         Button btn2 = (Button)findViewById(R.id.button2);
@@ -101,7 +112,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		else {
 			File extStore = Environment.getExternalStorageDirectory();
 			filepath = extStore.toString();
-			myExternalFile = new File(getExternalFilesDir(filepath), filename);
+			myExternalFile = new File(Environment.getExternalStorageDirectory(), filename);
 		}
 	}
 
@@ -187,71 +198,76 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				width = jpegSizes[0].getWidth();
 				height = jpegSizes[0].getHeight();
 			}
-			ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
-			List<Surface> outputSurfaces = new ArrayList<Surface>(2);
-			outputSurfaces.add(reader.getSurface());
-			outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
-			final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-			captureBuilder.addTarget(reader.getSurface());
-			captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-			// Orientation
-			int rotation = getWindowManager().getDefaultDisplay().getRotation();
-			captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-			final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
-			ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
-				@Override
-				public void onImageAvailable(ImageReader reader) {
-					Image image = null;
-					try {
-						image = reader.acquireLatestImage();
-						ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-						byte[] bytes = new byte[buffer.capacity()];
-						buffer.get(bytes);
-						save(bytes);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} finally {
-						if (image != null) {
-							image.close();
+
+				ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+				List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+				outputSurfaces.add(reader.getSurface());
+				outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
+				final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+				captureBuilder.addTarget(reader.getSurface());
+				captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+				// Orientation
+				int rotation = getWindowManager().getDefaultDisplay().getRotation();
+				captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+				final File file = new File(Environment.getExternalStorageDirectory() + "/pic.jpg");
+				ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
+					@Override
+					public void onImageAvailable(ImageReader reader) {
+						Image image = null;
+						try {
+							image = reader.acquireLatestImage();
+							ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+							byte[] bytes = new byte[buffer.capacity()];
+							buffer.get(bytes);
+							save(bytes);
+						} catch (FileNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							if (image != null) {
+								image.close();
+							}
 						}
 					}
-				}
-				private void save(byte[] bytes) throws IOException {
-					OutputStream output = null;
-					try {
-						output = new FileOutputStream(file);
-						output.write(bytes);
-					} finally {
-						if (null != output) {
-							output.close();
+
+					private void save(byte[] bytes) throws IOException {
+						OutputStream output = null;
+						try {
+							output = new FileOutputStream(file);
+							output.write(bytes);
+						} finally {
+							if (null != output) {
+								output.close();
+							}
 						}
 					}
-				}
-			};
-			reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
-			final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
-				@Override
-				public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-					super.onCaptureCompleted(session, request, result);
-					Toast.makeText(HttpServerActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
-					createCameraPreview();
-				}
-			};
-			cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
-				@Override
-				public void onConfigured(CameraCaptureSession session) {
-					try {
-						session.capture(captureBuilder.build(), captureListener, mBackgroundHandler);
-					} catch (CameraAccessException e) {
-						e.printStackTrace();
+				};
+				reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
+				final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+					@Override
+					public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+						super.onCaptureCompleted(session, request, result);
+						Toast.makeText(HttpServerActivity.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+						createCameraPreview();
 					}
-				}
-				@Override
-				public void onConfigureFailed(CameraCaptureSession session) {
-				}
-			}, mBackgroundHandler);
+				};
+				cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
+					@Override
+					public void onConfigured(CameraCaptureSession session) {
+						try {
+							session.capture(captureBuilder.build(), captureListener, mBackgroundHandler);
+						} catch (CameraAccessException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void onConfigureFailed(CameraCaptureSession session) {
+					}
+				}, mBackgroundHandler);
+
+
 		} catch (CameraAccessException e) {
 			e.printStackTrace();
 		}
@@ -278,13 +294,76 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				}
 				@Override
 				public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-					Toast.makeText(AndroidCameraApi.this, "Configuration change", Toast.LENGTH_SHORT).show();
+					Toast.makeText(HttpServerActivity.this, "Configuration change", Toast.LENGTH_SHORT).show();
 				}
 			}, null);
 		} catch (CameraAccessException e) {
 			e.printStackTrace();
 		}
 	}
+
+	private void openCamera() {
+		CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+		Log.e(TAG, "is camera open");
+		try {
+			cameraId = manager.getCameraIdList()[0];
+			CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+			StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+			assert map != null;
+			imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
+			// Add permission for camera and let user grant the permission
+			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				ActivityCompat.requestPermissions(HttpServerActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+				return;
+			}
+			manager.openCamera(cameraId, stateCallback, null);
+		} catch (CameraAccessException e) {
+			e.printStackTrace();
+		}
+		Log.e(TAG, "openCamera X");
+	}
+
+	protected void updatePreview() {
+		if(null == cameraDevice) {
+			Log.e(TAG, "updatePreview error, return");
+		}
+		captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+		try {
+			cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
+		} catch (CameraAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	private void closeCamera() {
+		if (null != cameraDevice) {
+			cameraDevice.close();
+			cameraDevice = null;
+		}
+		if (null != imageReader) {
+			imageReader.close();
+			imageReader = null;
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.e(TAG, "onResume");
+		startBackgroundThread();
+		if (textureView.isAvailable()) {
+			openCamera();
+		} else {
+			textureView.setSurfaceTextureListener(textureListener);
+		}
+	}
+	@Override
+	protected void onPause() {
+		Log.e(TAG, "onPause");
+		//closeCamera();
+		stopBackgroundThread();
+		super.onPause();
+	}
+
 
 	private static boolean isExternalStorageAvailable() {
 		String extStorageState = Environment.getExternalStorageState();
@@ -308,7 +387,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		if (v.getId() == R.id.button1) {
-
+			running = true;
 			int PERMISSION_ALL = 1;
 			String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE};
 
@@ -320,8 +399,15 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				s = new SocketServer(this);
 				s.start();
 
-				//camera = new CameraThread();
-				//camera.start();
+				while (running) {
+					try {
+						takePicture();
+						Thread.sleep(4000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
 			}
 		}
 		if (v.getId() == R.id.button2) {
@@ -331,6 +417,8 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+
+			running = false;
 		}
 	}
 
@@ -338,7 +426,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
 			for (String permission : permissions) {
 				if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-					return false;/////
+					return false;
 				}
 			}
 		}
@@ -355,9 +443,14 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 					s = new SocketServer(this);
 					s.start();
 
-					//camera = new CameraThread();
-					//camera.start();
+					takePicture();
 				}
+
+			case REQUEST_CAMERA_PERMISSION:
+						// close the app
+						Toast.makeText(HttpServerActivity.this, "Sorry!!!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
+						finish();
+
 				break;
 
 			default:

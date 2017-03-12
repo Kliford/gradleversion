@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Wed Mar 08 00:59:28 EET 2017
+#Sun Mar 12 11:49:42 EET 2017
 22.set=DEX
 8.set=ANDROID_RESOURCE
 11.set=DEX
@@ -17,7 +17,7 @@ count=24
 7.set=DEX
 20.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_6
 10.set=DEX
-15.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-hdpi-v4\\ic_launcher.png
+15.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\activity_http_server.xml
 15.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_
 7.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_1\\classes.dex
 7.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_1
@@ -28,7 +28,7 @@ count=24
 21.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_9\\classes.dex
 21.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_9
 20.set=DEX
-16.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\activity_http_server.xml
+16.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-hdpi-v4\\ic_launcher.png
 6.set=DEX
 16.base=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_
 8.file=C\:\\OSMZ\\gradleversion\\app\\build\\intermediates\\res\\resources-debug.ap_\\resources.arsc

@@ -165,7 +165,7 @@ public class SocketServer extends Thread {
             String s3 = "Content-Type: multipart/x-mixed-replace; boundary=gc0p4Jq0M2Yt08jU534c0p" + '\n' + '\n';
             bout.write(s3.getBytes());
 
-            while (true) {
+            while (bRunning) {
                 String s5 = "--gc0p4Jq0M2Yt08jU534c0p" + '\n';
                 bout.write(s5.getBytes());
                 String s6 = "Content-Type: image/jpeg" + '\n' + '\n';

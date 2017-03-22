@@ -400,14 +400,9 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				s = new SocketServer(this);
 				s.start();
 
-				while (true) {
-					try {
-						takePicture();
-						Thread.sleep(3000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
+				//do cyklu, vlakna
+				takePicture();
+				//
 			}
 		}
 		if (v.getId() == R.id.button2) {

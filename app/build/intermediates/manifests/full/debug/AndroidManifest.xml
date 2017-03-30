@@ -15,7 +15,10 @@
 
     <uses-feature android:name="android.hardware.camera2.full" />
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
+        android:name="com.kru13.HttpServer"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -29,6 +32,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name="com.kru13.httpserver.ServerReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service android:name="com.kru13.httpserver.HttpServerActivity$CapturingService" >
+        </service>
     </application>
 
 </manifest>

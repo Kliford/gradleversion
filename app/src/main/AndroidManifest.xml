@@ -22,7 +22,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="com.kru13.HttpServer">
+        android:name=".HttpServer">
         <activity
             android:name=".HttpServerActivity"
             android:label="@string/app_name">

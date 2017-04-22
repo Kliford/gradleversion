@@ -71,6 +71,9 @@ import java.util.List;
 
 public class HttpServerActivity extends Activity implements OnClickListener{
 
+	static {
+		System.loadLibrary("native-lib");
+	}
 
 	private CapturingService service;
 
@@ -106,6 +109,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 	private static final int REQUEST_CAMERA_PERMISSION = 200;
 
 	public TextView tv;
+	public TextView nativeTv;
 	private TextureView textureView;
 
 	public File myExternalPhotoFile;
@@ -114,8 +118,9 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 	private MediaProjectionManager mMediaProjectionManager;
 
 	private final String imageFilename = "pic.jpg";
+	public final String bitmapFilename = "bitmap.jpg";
 	private String htmlFileName = "page.html";
-	private String externalStoragePath;
+	public String externalStoragePath;
 	public String imageFilePath;
 	public File htmlFile;
 	private String screenshotFilename = "screencap.png";
@@ -142,6 +147,8 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 	private static HttpServerActivity context;
 
+	public native String stringFromJNI();
+
 
 
 	@Override
@@ -165,6 +172,9 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 		textureView = (TextureView) findViewById(R.id.textureView);
 		textureView.setSurfaceTextureListener(textureListener);
+
+		nativeTv = (TextView) findViewById(R.id.JNItextView);
+		nativeTv.setText( stringFromJNI() );
 
 		btn1.setOnClickListener(this);
 		btn2.setOnClickListener(this);
@@ -572,26 +582,20 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		switch (requestCode) {
 
 			case READ_EXTERNAL_STORAGE:
-				if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-						&& (grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-
-					//startService(new Intent(getBaseContext(), MyService.class));
 
 
+				//startService(new Intent(getBaseContext(), MyService.class));
 
 
-
-					takePicture();
-
+				takePicture();
 
 
-					Intent intent= new Intent(this, CapturingService.class);
+				Intent intent = new Intent(this, CapturingService.class);
 
 
+				bindService(intent, mConnection,
+						Context.BIND_AUTO_CREATE);
 
-					bindService(intent, mConnection,
-							Context.BIND_AUTO_CREATE);
-				}
 
 			case REQUEST_CAMERA_PERMISSION:
 				// close the app

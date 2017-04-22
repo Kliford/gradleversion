@@ -1,4 +1,4 @@
-package com.kru13;
+package com.kru13.httpserver;
 
 import android.app.Application;
 import android.content.Context;

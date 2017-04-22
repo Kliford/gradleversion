@@ -12,30 +12,30 @@
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Filip\.android\build-cache\125db636a72a23eedeb52de2eb4409199f934ecf\output\jars\classes.jar"
+        jar="C:\Users\Filip\.android\build-cache\bcb7e33e9bbceb405db5d5884eaa56632f2ce6d0\output\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="7bde4c34162092e0a77e7f12dc85ed77c484cf5c">
-        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_969c6ce5fa9fc2c60193a5593b4385c4c8ff637e\classes.dex" />
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_4e2e7ee04525a183507e0a72a81c7fb1f74e0929\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Filip\.android\build-cache\84afdc80da6a3647f5f09d33a0e48565072b260d\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="e2719c102dca3a7a5b02ce07f769362da6ddb4ab">
-        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ca5c6afa990bb1e677e180bf6d59aecedbc7017f\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Filip\.android\build-cache\f1dda1822176c06b8e9bab5342f246990bc2c04a\output\jars\classes.jar"
+        jar="C:\Users\Filip\.android\build-cache\a52cf75062d78bf4315d75f8fe7a944e5934c673\output\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="0fb891e8f0cfba0513043a7bb357513d229ca2cd">
-        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_6efb0eed634bf234aca2804792f3ffe8c53235c6\classes.dex" />
+        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_fbf8ba04a8b259e0e1d804a04127c4666fd67280\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Filip\.android\build-cache\050edeeaefeed46a2755b7d5cbdb5f11f053baae\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7bde4c34162092e0a77e7f12dc85ed77c484cf5c">
+        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_d3bd846f59a8f641db969178cc7d7cc172f7550e\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -43,26 +43,35 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="abf2f2c57a0d7bbb5d892997539c3799ce790041">
+        sha1="674128f26ecb71520278b3bfbc1717a110987eb6">
         <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_a44e0490658679edef7b73e02055dc5e242ff529\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Filip\.android\build-cache\748674659714597e12e3a1731112d71814787937\output\jars\classes.jar"
+        jar="C:\Users\Filip\.android\build-cache\428c8c0c8d57d7b60e343b68fae805388ce7dcad\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="02741d05d4b697fba5e279e9881aaa1da0ca7c7f">
+        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_25ab995a576c3caea28463c136a3129448cc0028\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Filip\.android\build-cache\bdf951ac1a6652705b43ae885ec9617550da457f\output\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
         sha1="3e04ac8ca644ea7baddf6fdcf72e15c79e9df94a">
-        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_87cd90daea765b8e1b8c1aa112bf687850d76baa\classes.dex" />
+        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_fa30e0f0827f65a2e171ba59ba379c4100c36a10\classes.dex" />
     </item>
     <item
         is-multidex="true"
-        jar="C:\Users\Filip\.android\build-cache\72537f19ea902151aeeebd5754dcdb8f13602ebd\output\jars\classes.jar"
+        jar="C:\Users\Filip\.android\build-cache\90eb4f8110f55b2b2ab8812f296211f15f583381\output\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f80b0e15df72b751087c39d5125b2b224369172a\classes.dex" />
+        sha1="e2719c102dca3a7a5b02ce07f769362da6ddb4ab">
+        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_66c8efc74959cf0e2ff6f9d8823464337b500cf4\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -72,15 +81,6 @@
         revision="25.0.2"
         sha1="b59b6ee8d6ecc03e672d253800430343493a6ed8">
         <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.1.1_bb6b53e156e974b9fb6abcfa8f219af23eb31891\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\Filip\.android\build-cache\a34cb4c693f3af1bbcee0065d2bd9adfcbce11bb\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.2"
-        sha1="02741d05d4b697fba5e279e9881aaa1da0ca7c7f">
-        <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5ba79fa4be829407d1dc2d2da63501a54cd37988\classes.dex" />
     </item>
 
 </items>

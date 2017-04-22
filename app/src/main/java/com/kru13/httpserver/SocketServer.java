@@ -7,25 +7,21 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
-import android.view.View;
-
-import com.kru13.HttpServer;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class SocketServer extends Thread {
 
@@ -37,6 +33,15 @@ public class SocketServer extends Thread {
     private Semaphore semaphore;
     private HttpServerActivity context;
 
+    private Bitmap bitmap;
+    final private int BITMAP_WIDTH = 800;
+    final private int BITMAP_HEIGHT = 600;
+
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    public native void changeToFractalPicture(Bitmap bitmapIn, int iterations);
 
 
     SocketServer(HttpServerActivity context) {
@@ -142,6 +147,32 @@ public class SocketServer extends Thread {
 
                         execute(bout, decodedCommand);
                     }
+                    else if(request.contains("fractal")) {
+
+                        int height = BITMAP_HEIGHT;
+                        int width = BITMAP_WIDTH;
+                        int iterations = 100;
+
+
+                        if (request.indexOf('?') != -1) {
+                            Map<String, String> map = getQueryMap(request.substring(request.indexOf('?') + 1,
+                                                                                    request.indexOf("HTTP/1.1") - 1));
+
+                            if (map.containsKey("vyska")) {
+                                height = Integer.valueOf(map.get("vyska"));
+                            }
+                            if (map.containsKey("sirka")) {
+                                width = Integer.valueOf(map.get("sirka"));
+                            }
+                            if (map.containsKey("iterace")) {
+                                iterations = Integer.valueOf(map.get("iterace"));
+                            }
+                        }
+
+                        bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+                        changeToFractalPicture(bitmap,iterations);
+                        sendPictureResponse(bout,bitmap,100);
+                    }
                 } catch (FileNotFoundException e) {
                     printPageNotFound(bout);
                 } catch (InterruptedException e) {
@@ -154,6 +185,19 @@ public class SocketServer extends Thread {
             } /*catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
+        }
+
+        public Map<String, String> getQueryMap(String query)
+        {
+            String[] params = query.split("&");
+            Map<String, String> map = new HashMap<String, String>();
+            for (String param : params)
+            {
+                String name = param.split("=")[0];
+                String value = param.split("=")[1];
+                map.put(name, value);
+            }
+            return map;
         }
 
         private void sendMJPEGStreamScreenResponse(BufferedOutputStream bout, String screenshotFilePath, int image_quality) throws IOException, InterruptedException {
@@ -259,6 +303,25 @@ public class SocketServer extends Thread {
             bout.write(s3.getBytes());
 
             byte[] image = getImageInBytes(pathToImage, quality);
+
+            bout.write(image);
+
+            String newLine = "\n";
+            bout.write(newLine.getBytes());
+        }
+
+        private void sendPictureResponse(BufferedOutputStream bout, Bitmap bitmap, int quality) throws IOException {
+            String s1 = "HTTP/1.1 200 OK" + '\n';
+            bout.write(s1.getBytes());
+            String s2 = "Date: " + SocketServer.getCurrentDate() + '\n';
+            bout.write(s2.getBytes());
+            String s3 = "Content-Type: image/jpeg" + '\n' + '\n';
+            bout.write(s3.getBytes());
+
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
+            byte[] image = stream.toByteArray();
 
             bout.write(image);
 

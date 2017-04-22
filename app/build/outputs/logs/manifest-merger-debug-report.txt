@@ -17,14 +17,14 @@ ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:2:1-46:12
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:2:11-69
 uses-sdk
 ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:7:5-9:41
-MERGED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\72537f19ea902151aeeebd5754dcdb8f13602ebd\output\AndroidManifest.xml:21:5-23:54
-MERGED from [com.android.support:support-fragment:25.1.1] C:\Users\Filip\.android\build-cache\84afdc80da6a3647f5f09d33a0e48565072b260d\output\AndroidManifest.xml:21:5-23:60
-MERGED from [com.android.support:support-media-compat:25.1.1] C:\Users\Filip\.android\build-cache\125db636a72a23eedeb52de2eb4409199f934ecf\output\AndroidManifest.xml:21:5-23:63
-MERGED from [com.android.support:support-core-ui:25.1.1] C:\Users\Filip\.android\build-cache\748674659714597e12e3a1731112d71814787937\output\AndroidManifest.xml:21:5-23:58
-MERGED from [com.android.support:support-core-utils:25.1.1] C:\Users\Filip\.android\build-cache\f1dda1822176c06b8e9bab5342f246990bc2c04a\output\AndroidManifest.xml:21:5-23:61
-MERGED from [com.android.support:support-compat:25.1.1] C:\Users\Filip\.android\build-cache\a34cb4c693f3af1bbcee0065d2bd9adfcbce11bb\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\bcb7e33e9bbceb405db5d5884eaa56632f2ce6d0\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.1.1] C:\Users\Filip\.android\build-cache\90eb4f8110f55b2b2ab8812f296211f15f583381\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.1.1] C:\Users\Filip\.android\build-cache\050edeeaefeed46a2755b7d5cbdb5f11f053baae\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.1.1] C:\Users\Filip\.android\build-cache\bdf951ac1a6652705b43ae885ec9617550da457f\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.1.1] C:\Users\Filip\.android\build-cache\a52cf75062d78bf4315d75f8fe7a944e5934c673\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.1.1] C:\Users\Filip\.android\build-cache\428c8c0c8d57d7b60e343b68fae805388ce7dcad\output\AndroidManifest.xml:21:5-23:58
 	tools:overrideLibrary
-		ADDED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\72537f19ea902151aeeebd5754dcdb8f13602ebd\output\AndroidManifest.xml:23:9-51
+		ADDED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\bcb7e33e9bbceb405db5d5884eaa56632f2ce6d0\output\AndroidManifest.xml:23:9-51
 	android:targetSdkVersion
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:9:9-38
 		INJECTED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml
@@ -59,12 +59,12 @@ ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:18:5-75
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:18:22-72
 application
 ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:20:5-44:19
-MERGED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\72537f19ea902151aeeebd5754dcdb8f13602ebd\output\AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-fragment:25.1.1] C:\Users\Filip\.android\build-cache\84afdc80da6a3647f5f09d33a0e48565072b260d\output\AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-media-compat:25.1.1] C:\Users\Filip\.android\build-cache\125db636a72a23eedeb52de2eb4409199f934ecf\output\AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-core-ui:25.1.1] C:\Users\Filip\.android\build-cache\748674659714597e12e3a1731112d71814787937\output\AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-core-utils:25.1.1] C:\Users\Filip\.android\build-cache\f1dda1822176c06b8e9bab5342f246990bc2c04a\output\AndroidManifest.xml:25:5-20
-MERGED from [com.android.support:support-compat:25.1.1] C:\Users\Filip\.android\build-cache\a34cb4c693f3af1bbcee0065d2bd9adfcbce11bb\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\bcb7e33e9bbceb405db5d5884eaa56632f2ce6d0\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-fragment:25.1.1] C:\Users\Filip\.android\build-cache\90eb4f8110f55b2b2ab8812f296211f15f583381\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-media-compat:25.1.1] C:\Users\Filip\.android\build-cache\050edeeaefeed46a2755b7d5cbdb5f11f053baae\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-ui:25.1.1] C:\Users\Filip\.android\build-cache\bdf951ac1a6652705b43ae885ec9617550da457f\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-utils:25.1.1] C:\Users\Filip\.android\build-cache\a52cf75062d78bf4315d75f8fe7a944e5934c673\output\AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-compat:25.1.1] C:\Users\Filip\.android\build-cache\428c8c0c8d57d7b60e343b68fae805388ce7dcad\output\AndroidManifest.xml:25:5-20
 	android:label
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:23:9-41
 	android:allowBackup
@@ -74,7 +74,7 @@ MERGED from [com.android.support:support-compat:25.1.1] C:\Users\Filip\.android\
 	android:theme
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:24:9-40
 	android:name
-		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:25:9-44
+		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:25:9-35
 activity#com.kru13.httpserver.HttpServerActivity
 ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:26:9-34:20
 	android:label

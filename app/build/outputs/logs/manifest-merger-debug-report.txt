@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:2:1-46:12
+ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:2:1-41:12
 	package
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:3:5-35
 		INJECTED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml
@@ -58,7 +58,7 @@ ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:18:5-75
 	android:name
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:18:22-72
 application
-ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:20:5-44:19
+ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:20:5-39:19
 MERGED from [com.android.support:support-v4:25.1.1] C:\Users\Filip\.android\build-cache\bcb7e33e9bbceb405db5d5884eaa56632f2ce6d0\output\AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-fragment:25.1.1] C:\Users\Filip\.android\build-cache\90eb4f8110f55b2b2ab8812f296211f15f583381\output\AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-media-compat:25.1.1] C:\Users\Filip\.android\build-cache\050edeeaefeed46a2755b7d5cbdb5f11f053baae\output\AndroidManifest.xml:25:5-20
@@ -91,15 +91,7 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:32:17-77
 	android:name
 		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:32:27-74
-receiver#com.kru13.httpserver.ServerReceiver
-ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:36:9-39:48
-	android:enabled
-		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:38:13-35
-	android:exported
-		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:39:13-36
-	android:name
-		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:37:13-43
 service#com.kru13.httpserver.HttpServerActivity$CapturingService
-ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:41:9-43:19
+ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:36:9-38:19
 	android:name
-		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:42:13-64
+		ADDED from C:\OSMZ\gradleversion\app\src\main\AndroidManifest.xml:37:13-64

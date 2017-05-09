@@ -33,11 +33,6 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".ServerReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
-
         <service
             android:name=".HttpServerActivity$CapturingService">
         </service>

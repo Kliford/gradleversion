@@ -33,9 +33,12 @@ public class SocketServer extends Thread {
     private Semaphore semaphore;
     private HttpServerActivity context;
 
+    //fractal
     private Bitmap bitmap;
-    final private int BITMAP_WIDTH = 800;
-    final private int BITMAP_HEIGHT = 600;
+    private int BITMAP_WIDTH = 800;
+    private int BITMAP_HEIGHT = 600;
+    private int ITERATIONS = 100;
+    final private int FRACTAL_IMAGE_QUALITY = 100;
 
     static {
         System.loadLibrary("native-lib");
@@ -149,29 +152,24 @@ public class SocketServer extends Thread {
                     }
                     else if(request.contains("fractal")) {
 
-                        int height = BITMAP_HEIGHT;
-                        int width = BITMAP_WIDTH;
-                        int iterations = 100;
-
-
                         if (request.indexOf('?') != -1) {
                             Map<String, String> map = getQueryMap(request.substring(request.indexOf('?') + 1,
                                                                                     request.indexOf("HTTP/1.1") - 1));
 
                             if (map.containsKey("vyska")) {
-                                height = Integer.valueOf(map.get("vyska"));
+                                BITMAP_HEIGHT = Integer.valueOf(map.get("vyska"));
                             }
                             if (map.containsKey("sirka")) {
-                                width = Integer.valueOf(map.get("sirka"));
+                                BITMAP_WIDTH = Integer.valueOf(map.get("sirka"));
                             }
                             if (map.containsKey("iterace")) {
-                                iterations = Integer.valueOf(map.get("iterace"));
+                                ITERATIONS = Integer.valueOf(map.get("iterace"));
                             }
                         }
 
-                        bitmap = Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
-                        changeToFractalPicture(bitmap,iterations);
-                        sendPictureResponse(bout,bitmap,100);
+                        bitmap = Bitmap.createBitmap(BITMAP_WIDTH, BITMAP_HEIGHT, Bitmap.Config.ARGB_8888);
+                        changeToFractalPicture(bitmap,ITERATIONS);
+                        sendPictureResponse(bout,bitmap,FRACTAL_IMAGE_QUALITY);
                     }
                 } catch (FileNotFoundException e) {
                     printPageNotFound(bout);
@@ -182,9 +180,7 @@ public class SocketServer extends Thread {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            } /*catch (InterruptedException e) {
-                    e.printStackTrace();
-                }*/
+            }
         }
 
         public Map<String, String> getQueryMap(String query)
@@ -221,7 +217,7 @@ public class SocketServer extends Thread {
 
                 String newLine = "\n";
                 bout.write(newLine.getBytes());
-            } // neukonceno --gc0p4Jq0M2Yt08jU534c0p--
+            } // neukonceno s --gc0p4Jq0M2Yt08jU534c0p--
 
         }
 
@@ -237,10 +233,8 @@ public class SocketServer extends Thread {
                 String s3 = "Content-Type: text/html" + '\n' + '\n';
                 out.write(s3.getBytes());
 
-
                 p = Runtime.getRuntime().exec(command);
                 p.waitFor();
-
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
@@ -317,7 +311,6 @@ public class SocketServer extends Thread {
             bout.write(s2.getBytes());
             String s3 = "Content-Type: image/jpeg" + '\n' + '\n';
             bout.write(s3.getBytes());
-
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
@@ -421,7 +414,6 @@ public class SocketServer extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 }

@@ -43,7 +43,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="674128f26ecb71520278b3bfbc1717a110987eb6">
+        sha1="15e6df00c657e9a1fdacb1cf77fcd6cba2cd0f71">
         <dex dex="C:\OSMZ\gradleversion\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_a44e0490658679edef7b73e02055dc5e242ff529\classes.dex" />
     </item>
     <item

@@ -71,13 +71,15 @@ import java.util.List;
 
 public class HttpServerActivity extends Activity implements OnClickListener{
 
+	//NDK JNI, fractal
 	static {
 		System.loadLibrary("native-lib");
 	}
 
 	private CapturingService service;
-
 	private SocketServer server;
+
+	//camera
 	protected CameraDevice cameraDevice;
 	private Handler mBackgroundHandler;
 	private HandlerThread mBackgroundThread;
@@ -86,55 +88,24 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 	private CameraManager manager;
 	private List<Surface> outputSurfaces;
 	private CaptureRequest.Builder captureBuilder;
-	//private static HttpServerActivity context;
-
 	private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 	static {
-		ORIENTATIONS.append(Surface.ROTATION_0, 90);
-		ORIENTATIONS.append(Surface.ROTATION_90, 0);
-		ORIENTATIONS.append(Surface.ROTATION_180, 270);
-		ORIENTATIONS.append(Surface.ROTATION_270, 180);
+		ORIENTATIONS.append(Surface.ROTATION_0, 0);
+		ORIENTATIONS.append(Surface.ROTATION_90, 90);
+		ORIENTATIONS.append(Surface.ROTATION_180, 180);
+		ORIENTATIONS.append(Surface.ROTATION_270, 270);
 	}
-
-	private final int IMAGE_WIDTH = 320;
-	private final int IMAGE_HEIGHT = 240;
-	private Size imageDimension;
 	protected CaptureRequest.Builder captureRequestBuilder;
 	protected CameraCaptureSession cameraCaptureSessions;
+	private Size imageDimension;
 	private String cameraId;
 	private ImageReader imageReader;
-
-	private static final int READ_EXTERNAL_STORAGE = 1;
-	private static final int REQUEST_MEDIA_PROJECTION = 1;
-	private static final int REQUEST_CAMERA_PERMISSION = 200;
-
-	public TextView tv;
-	public TextView nativeTv;
-	private TextureView textureView;
-
-	public File myExternalPhotoFile;
-
-	private static final String TAG = "AndroidCameraApi";
-	private MediaProjectionManager mMediaProjectionManager;
-
-	private final String imageFilename = "pic.jpg";
-	public final String bitmapFilename = "bitmap.jpg";
-	private String htmlFileName = "page.html";
-	public String externalStoragePath;
-	public String imageFilePath;
-	public File htmlFile;
-	private String screenshotFilename = "screencap.png";
-	public String screenshotFilePath;
-
-
-
 	private static final int REQUEST_CODE = 100;
 	private static String STORE_DIRECTORY;
 	private static int IMAGES_PRODUCED;
 	private static final String SCREENCAP_NAME = "screencap";
 	private static final int VIRTUAL_DISPLAY_FLAGS = DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY | DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
 	private static MediaProjection sMediaProjection;
-
 	private MediaProjectionManager mProjectionManager;
 	private ImageReader mImageReader;
 	private Handler mHandler;
@@ -143,12 +114,41 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 	private int mDensity;
 	private int mWidth;
 	private int mHeight;
-	private int mRotation;
+	private final int CAMERA_IMAGE_QUALITY = 70;
+	private static final int MAX_IMAGES = 1;
+
+	//image size
+	private final int IMAGE_WIDTH = 320;
+	private final int IMAGE_HEIGHT = 240;
+
+	//permisions
+	private static final int READ_EXTERNAL_STORAGE = 1;
+	private static final int REQUEST_CAMERA_PERMISSION = 200;
+
+	//UI
+	public TextView tv;
+	public TextView nativeTv;
+	private TextureView textureView;
+
+	//console (debug)
+	private static final String TAG = "AndroidCameraApi";
+
+	//paths and filenames
+	public String externalStoragePath;
+	private final String imageFilename = "pic.jpg";
+	public String imageFilePath;
+	private final String htmlFileName = "page.html";
+	public File htmlFile;
+	private final String screenshotFilename = "screencap.png";
+	public String screenshotFilePath;
+	public File myExternalPhotoFile;
+
+	//
+	private static final int NOTIFICATION_ID = 2;
 
 	private static HttpServerActivity context;
 
 	public native String stringFromJNI();
-
 
 
 	@Override
@@ -188,7 +188,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 			File extStore = Environment.getExternalStorageDirectory();
 			htmlFile = new File(extStore, htmlFileName);
 
-
 			mProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 
 			// start capture handling thread
@@ -201,8 +200,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				}
 			}.start();
 		}
-
-
 	}
 
 	@Override
@@ -234,10 +231,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 				// create virtual display depending on device width / height
 				createVirtualDisplay();
-
-
-				// register media projection stop callback
-				//sMediaProjection.registerCallback(new MediaProjectionStopCallback(), mHandler);
 			}
 		}
 	}
@@ -250,7 +243,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		mHeight = size.y;
 
 		// start capture reader
-		mImageReader = ImageReader.newInstance(mWidth, mHeight, PixelFormat.RGBA_8888, 2);
+		mImageReader = ImageReader.newInstance(mWidth, mHeight, PixelFormat.RGBA_8888, MAX_IMAGES);
 		mVirtualDisplay = sMediaProjection.createVirtualDisplay(SCREENCAP_NAME, mWidth, mHeight, mDensity, VIRTUAL_DISPLAY_FLAGS, mImageReader.getSurface(), null, mHandler);
 		mImageReader.setOnImageAvailableListener(new ImageAvailableListener(), mHandler);
 	}
@@ -263,7 +256,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		}
 		@Override
 		public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-			// Transform you image captured size according to the surface width and height
+			// Transform your image captured size according to the surface width and height
 		}
 		@Override
 		public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -498,6 +491,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		Log.e(TAG, "onPause");
 		//closeCamera();
 		stopBackgroundThread();
+		closeCamera();
 		super.onPause();
 	}
 
@@ -529,19 +523,12 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 			}
 
 			else {
-				//startService(new Intent(getBaseContext(), MyService.class));
-
-				//server = new SocketServer(this);
-				//server.start();
 
 				//do cyklu, vlakna
 				takePicture();
 				//
 
 				Intent intent= new Intent(this, CapturingService.class);
-
-
-				//startService(intent);
 				bindService(intent, mConnection,Context.BIND_AUTO_CREATE);
 				startService(intent);
 
@@ -583,16 +570,9 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 			case READ_EXTERNAL_STORAGE:
 
-
-				//startService(new Intent(getBaseContext(), MyService.class));
-
-
 				takePicture();
 
-
 				Intent intent = new Intent(this, CapturingService.class);
-
-
 				bindService(intent, mConnection,
 						Context.BIND_AUTO_CREATE);
 
@@ -608,30 +588,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				break;
 		}
 	}
-
-	private ServiceConnection mConnection = new ServiceConnection() {
-
-		public void onServiceConnected(ComponentName className,
-									   IBinder binder) {
-			CapturingService.MyBinder b = (CapturingService.MyBinder) binder;
-			service = b.getService();
-			Toast.makeText(HttpServerActivity.this, "Connected", Toast.LENGTH_SHORT)
-					.show();
-		}
-
-		public void onServiceDisconnected(ComponentName className) {
-			service = null;
-		}
-	};
-
-	public Handler handler = new Handler(Looper.getMainLooper()){
-		@Override
-		public void handleMessage(Message msg) {
-			tv.append(msg.obj.toString() + '\n');
-			super.handleMessage(msg);
-		}
-	};
-
 
 	private class ImageAvailableListener implements ImageReader.OnImageAvailableListener {
 		@Override
@@ -655,7 +611,7 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 					// write bitmap to a file
 					fos = new FileOutputStream(screenshotFilePath);
-					bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+					bitmap.compress(Bitmap.CompressFormat.JPEG, CAMERA_IMAGE_QUALITY, fos);
 
 					IMAGES_PRODUCED++;
 					Log.e(TAG, screenshotFilePath + IMAGES_PRODUCED);
@@ -683,12 +639,10 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 		}
 	}
 
+	//service creates server instance and notification
 	public static class CapturingService extends Service {
 
 		private SocketServer server;
-		//private CameraCapturing cameraCapturing;
-		private ScreenCapturing screenCapturing;
-
 		IBinder mBinder = new MyBinder();
 
 		public CapturingService() {
@@ -702,21 +656,14 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 			Notification notification = new NotificationCompat.Builder(this)
 					.setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle("My Awesome App")
-					.setContentText("Doing some work...")
+					.setContentTitle("Capturing screen is running")
+					.setContentText("Type to open the app")
 					.setContentIntent(pendingIntent).build();
 
 			NotificationManager mNotificationManager =
-
-			(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-//When you issue multiple notifications about the same type of event, it’s best practice for your app to try to update an existing notification with this new information, rather than immediately creating a new notification. If you want to update this notification at a later date, you need to assign it an ID. You can then use this ID whenever you issue a subsequent notification. If the previous notification is still visible, the system will update this existing notification, rather than create a new one. In this example, the notification’s ID is 001//
-
-			//mNotificationManager.notify();
-
-			mNotificationManager.notify(2, notification);
-
-			startForeground(2, notification);
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			mNotificationManager.notify(NOTIFICATION_ID, notification);
+			startForeground(NOTIFICATION_ID, notification);
 		}
 
 		public int onStartCommand(Intent intent, int flags, int startId) {
@@ -728,8 +675,6 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 
 		@Override
 		public IBinder onBind(Intent intent) {
-
-
 			return mBinder;
 		}
 
@@ -738,8 +683,28 @@ public class HttpServerActivity extends Activity implements OnClickListener{
 				return CapturingService.this;
 			}
 		}
-
 	}
 
+	private ServiceConnection mConnection = new ServiceConnection() {
+		public void onServiceConnected(ComponentName className,
+									   IBinder binder) {
+			CapturingService.MyBinder b = (CapturingService.MyBinder) binder;
+			service = b.getService();
+			Toast.makeText(HttpServerActivity.this, "Connected", Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			service = null;
+		}
+	};
+
+	public Handler handler = new Handler(Looper.getMainLooper()){
+		@Override
+		public void handleMessage(Message msg) {
+			tv.append(msg.obj.toString() + '\n');
+			super.handleMessage(msg);
+		}
+	};
 }
 
